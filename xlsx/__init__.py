@@ -111,6 +111,13 @@ class SharedStrings(list):
         else:
             return ""
 
+def columnOffset(name):
+    i = 0
+    for c in name:
+      i *= 26
+      i += ord(c) - ord('A')
+    return i
+
 class Sheet(object):
 
     def __init__(self, workbook, id, name):
@@ -135,7 +142,8 @@ class Sheet(object):
                 colType = columnNode.getAttribute("t")
                 cellId = columnNode.getAttribute("r")
                 cellS = columnNode.getAttribute("s")
-                colNum = cellId[:len(cellId)-len(str(rowNum))]
+                colName = cellId[:len(cellId)-len(str(rowNum))]
+                colOffset = columnOffset(colName)
                 formula = None
                 data = ''
                 try:
@@ -160,11 +168,14 @@ class Sheet(object):
                     pass
                 if not rowNum in rows:
                     rows[rowNum] = []
-                if not colNum in columns:
-                    columns[colNum] = []
-                cell = Cell(rowNum, colNum, data, formula=formula)
-                rows[rowNum].append(cell)
-                columns[colNum].append(cell)
+                if not colName in columns:
+                    columns[colName] = []
+                cell = Cell(rowNum, colName, data, formula=formula)
+                row = rows[rowNum]
+                while len(row) < colOffset - 1:
+                    row.append(Cell(rowNum, colName, None))
+                row.append(cell)
+                columns[colName].append(cell)
                 self.__cells[cellId] = cell
         self.__rows = rows
         self.__cols = columns

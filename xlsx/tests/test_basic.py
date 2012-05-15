@@ -63,6 +63,18 @@ class WorkbookTestCase(unittest.TestCase):
         self.assertEqual(unicode(workbook[2].cols()['A'][1].value),
                          u'エム セシビ め「こを バジョン')
 
+    def test_blank_cells(self):
+        """
+        Ensure that missing cells are inserted into Sheet.rows()
+        and Sheet.columns()
+        """
+        workbook = self.workbooks['test3.xlsx']
+        sheet = workbook[1]
+
+        self.assertEqual(len(sheet.rows()[1]), 5)
+        self.assertEqual(len(sheet.rows()[2]), 5)
+        self.assertEqual(sheet.rows()[1][4].value, 'sixth column')
+        self.assertEqual(sheet.rows()[2][4].value, 'column F')
 
 if __name__ == '__main__':
     unittest.main()
