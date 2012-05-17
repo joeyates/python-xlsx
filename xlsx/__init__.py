@@ -60,7 +60,7 @@ class Workbook(object):
         docPropsCoreDoc = self.domzip["docProps/core.xml"]
         modified = docPropsCoreDoc.firstChild.getElementsByTagName("dcterms:modified")
         if len(modified) > 0:
-            self.dcterms_modified = [0].childNodes[0].data
+            self.dcterms_modified = modified[0].childNodes[0].data
         
         workbookDoc = self.domzip["xl/workbook.xml"]
         sheets = workbookDoc.firstChild.getElementsByTagName("sheets")[0]
